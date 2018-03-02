@@ -151,6 +151,22 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             // reached the final level, now let's lay things out
             cy.layout(options.layout);
+            cy.nodes().forEach(function(ele) {
+                ele.qtip({
+                    content: {
+                        text: qtipText(ele),
+                        title: ele.data('fullName')
+                    },
+                    style: {
+                        classes: 'qtip-bootstrap'
+                    },
+                    position: {
+                        my: 'bottom center',
+                        at: 'top center',
+                        target: ele
+                    }
+                });
+            });
         }
     }
 });
@@ -197,4 +213,14 @@ function twitterUserObjToCyEle(user, level) {
             y: -1000000
         }
     }
+}
+
+function qtipText(node) {
+    var twitterLink = '<a href="http://twitter.com/' + node.data('username') + '">' + node.data('username') + '</a>';
+    var following = 'Following ' + node.data('followingCount') + ' other users';
+    var location = 'Location: ' + node.data('location');
+    var image = '<img src="' + node.data('profilePic') + '" style="float:left;width:48px;height:48px;">';
+    var description = '<i>' + node.data('description') + '</i>';
+
+    return image + '&nbsp' + twitterLink + '<br> &nbsp' + location + '<br> &nbsp' + following + '<p><br>' + description + '</p>';
 }
