@@ -25,13 +25,20 @@
         width: 10%;
         display: none;
     }
-
+    #layoutButtons {
+        position: absolute;
+        top: 5%;
+        right: 2%;
+    }
 </style>
 <body>
 <div id='cy'></div>
 <div id="userSelection">
     <input type="text" id="twitterHandle" placeholder="Twitter username">
     <input type="button" id="submitButton" value="Start graph">
+</div>
+<div id='layoutButtons'>
+    <input type='button' id='concentricButton' value='Redo layout'>
 </div>
 </body>
 </html>

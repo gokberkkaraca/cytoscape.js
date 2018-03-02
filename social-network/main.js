@@ -2,7 +2,48 @@
 document.addEventListener('DOMContentLoaded', function () {
     var mainUser;
     var cy = window.cy = cytoscape({
-        container: document.getElementById('cy')
+        container: document.getElementById('cy'),
+        style: [
+            {
+                selector: 'node',
+                style: {
+                    'label': 'data(username)',
+                    'width': 'mapData(followerCount, 0, 400, 50, 150)',
+                    'height': 'mapData(followerCount, 0, 400, 50, 150)',
+                    'background-color': 'mapData(tweetCount, 0, 2000, #aaa, #02779E)'
+                }
+            },
+            {
+                selector: 'edge',
+                style: {
+                    events: 'no'
+                }
+            },
+            {
+                selector: ':selected',
+                style: {
+                    'border-width': 10,
+                    'border-style': 'solid',
+                    'border-color': 'black'
+                }
+            }
+        ]
+    });
+
+    var concentricOptions = {
+        name: 'concentric',
+        concentric: function (node) {
+            return 10 - node.data('level');
+        },
+        levelWidth: function () {
+            return 1;
+        },
+        animate: false
+    }
+
+    var concentricButton = document.getElementById('concentricButton');
+    concentricButton.addEventListener('click', function() {
+        cy.layout(concentricOptions);
     });
 
     var submitButton = document.getElementById("submitButton");
@@ -26,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     var options = {
                         maxLevel: 4,
                         usersPerLevel: 3,
-                        layout: concentricLayout
+                        layout: concentricOptions
                     };
                     addFollowersByLevel(1, options);
                 } catch (error) {
