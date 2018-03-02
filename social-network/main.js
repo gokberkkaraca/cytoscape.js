@@ -5,6 +5,41 @@ document.addEventListener('DOMContentLoaded', function () {
         container: document.getElementById('cy')
     });
 
+    var submitButton = document.getElementById("submitButton");
+    submitButton.addEventListener('click', function () {
+        cy.elements().remove();
+        var userInput = document.getElementById('twitterHandle').value;
+        if (userInput) {
+            mainUser = userInput
+        }
+        else {
+            mainUser = 'cytoscape';
+        }
+
+        // add first user to graph
+        getUser(mainUser)
+            .then(function(then) {
+                addToGraph(then.user, then.followers, 0);
+
+                // add followers
+                try {
+                    var options = {
+                        maxLevel: 4,
+                        usersPerLevel: 3,
+                        layout: concentricLayout
+                    };
+                    addFollowersByLevel(1, options);
+                } catch (error) {
+                    console.log(error);
+                }
+            })
+            .catch(function(err) {
+                console.log('Could not get data. Error message: ' + err);
+            });
+    });
+
+    submitButton.click();
+
     function addToGraph(targetUser, followers, level) {
         // targetUser
         if (cy.getElementById(targetUser.id_str).empty()) {
@@ -30,17 +65,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    var submitButton = document.getElementById("submitButton");
-    submitButton.addEventListener('click', function () {
-        cy.elements.remove();
-        var userInput = document.getElementById('twitterHandle').value;
-        if (userInput) {
-            mainUser = userInput
-        }
-        else {
-            mainUser = 'cytoscape';
-        }
-    });
 
     function addFollowersByLevel(level, options) {
         function followerCompare(a, b) {
@@ -130,5 +154,6 @@ function twitterUserObjToCyEle(user, level) {
         position: {
             x: -1000000,
             y: -1000000
-        };
+        }
+    }
 }
