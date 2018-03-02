@@ -167,6 +167,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 });
             });
+            var loading = document.getElementById('loading');
+            loading.classList.add('loaded');
         }
     }
 });
